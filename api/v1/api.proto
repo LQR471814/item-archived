@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package v1;
+
+enum ImageFormat {
+  JPG = 0;
+  PNG = 1;
+  GIF = 2;
+  SVG = 3;
+}
+
+// EntryMetadata describes the metadata present in both items and containers
+message EntryMetadata {
+  string id = 1;
+  repeated string tags = 2;
+  optional string description = 3;
+  optional bytes image = 4;
+  optional ImageFormat image_format = 5;
+}
+
+// Read
+message ReadRequest {
+  // path should be an array of strings in the following format:
+  //
+  // [id.tag_1.tag_2.container, id_2.tag_3.container, id_3.item]
+  //
+  // both the tags and the entry type should be added to the path segment separated by dots
+  repeated string path = 1;
+}
+message ReadResponse {
+  message Children {
+    // note: this is a filename formatted as "id.tag_1.tag_2", the .item ext should be appended as necessary
+    repeated string item_names = 1;
+    // note: this is a filename formatted as "id.tag_1.tag_2", the .container ext should be appended as necessary
+    repeated string container_names = 2;
+  }
+  EntryMetadata metadata = 1;
+  // children will be defined if the entry is a container, otherwise it will be null
+  optional Children children = 2;
+}
+
+// Create creates a container or item
+message CreateRequest {
+  EntryMetadata metadata = 1;
+  // this should follow the same convention as the path in ReadRequest
+  repeated string path = 2;
+  // create_container will create a container instead of an item if true
+  bool create_container = 3;
+}
+message CreateResponse {}
+
+// Move can move a container or an item
+message MoveRequest {
+  // this should follow the same convention as the path in ReadRequest
+  repeated string src = 1;
+  // this should follow the same convention as the path in ReadRequest
+  repeated string dest = 2;
+}
+message MoveResponse {}
+
+// Delete can delete a container or an item
+message DeleteRequest {
+  // this should follow the same convention as the path in ReadRequest
+  repeated string path = 1;
+}
+message DeleteResponse {}
+
+service ArchiveService {
+  rpc Read(ReadRequest) returns (ReadResponse);
+  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc Move(MoveRequest) returns (MoveResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+}
+
