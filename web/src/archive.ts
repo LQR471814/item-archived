@@ -1,7 +1,7 @@
 import { createPromiseClient, type PromiseClient } from "@connectrpc/connect"
-import { ArchiveService } from "./backend/api_connect"
+import { ArchiveService } from "./api/v1/api_connect"
 import { createConnectTransport } from "@connectrpc/connect-web"
-import type { EntryMetadata } from "./backend/api_pb"
+import type { EntryMetadata } from "./api/v1/api_pb"
 
 const transport = createConnectTransport({
   baseUrl: import.meta.env.VITE_SERVER_URL !== "" ? import.meta.env.VITE_SERVER_URL : window.location.origin

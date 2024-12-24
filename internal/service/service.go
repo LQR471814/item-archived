@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"fmt"
 	v1 "item-archived/api/v1"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,13 +38,23 @@ type Service struct {
 	dir string
 }
 
-func NewService(dir string) Service {
-	return Service{dir: dir}
+func NewService(dir string) (Service, error) {
+	_, dirname := filepath.Split(dir)
+	if !strings.HasSuffix(dirname, ".container") {
+		return Service{}, fmt.Errorf(
+			"NewService: you must use a directory with a .container extension as the root, '%s' does not have such an extension.",
+			dirname,
+		)
+	}
+	return Service{dir: dir}, nil
 }
 
 func (s Service) Read(ctx context.Context, req *connect.Request[v1.ReadRequest]) (*connect.Response[v1.ReadResponse], error) {
 	path := req.Msg.GetPath()
-	fpath := filepath.Join(path...)
+	fpath := filepath.Join(append([]string{s.dir}, path...)...)
+
+	slog.Debug("reading dir", "dir", fpath)
+
 	_, err := os.Stat(fpath)
 	if err != nil {
 		return nil, err
@@ -53,7 +65,7 @@ func (s Service) Read(ctx context.Context, req *connect.Request[v1.ReadRequest])
 	}
 
 	var children *v1.ReadResponse_Children
-	if strings.HasSuffix(path[len(path)-1], ".container") {
+	if len(path) == 0 || strings.HasSuffix(path[len(path)-1], ".container") {
 		items, containers, err := readChildren(fpath)
 		if err != nil {
 			return nil, err
