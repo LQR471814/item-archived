@@ -24,6 +24,7 @@
   "dependencies": {
     "@bufbuild/protobuf": "1.10.0",
     "@connectrpc/connect": "1.4.0",
-    "@connectrpc/connect-web": "1.4.0"
+    "@connectrpc/connect-web": "1.4.0",
+    "@tanstack/svelte-query": "https://pkg.pr.new/@tanstack/svelte-query@56f67c7d62d60b26a3dfbf8e359f12257dcbc8eb"
   }
 }
