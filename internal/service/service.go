@@ -121,3 +121,7 @@ func (s Service) Delete(ctx context.Context, req *connect.Request[v1.DeleteReque
 		Msg: &v1.DeleteResponse{},
 	}, nil
 }
+
+func (s Service) Search(ctx context.Context, req *connect.Request[v1.SearchRequest]) (*connect.Response[v1.SearchResponse], error) {
+
+}

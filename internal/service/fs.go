@@ -66,6 +66,7 @@ func readEntryMeta(fpath string) (*v1.EntryMetadata, error) {
 			continue
 		}
 		imgFormat = &ext.format
+		break
 	}
 
 	var description *string

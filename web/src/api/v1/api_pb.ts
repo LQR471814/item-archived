@@ -476,3 +476,122 @@ export class DeleteResponse extends Message<DeleteResponse> {
   }
 }
 
+/**
+ * Search
+ *
+ * @generated from message v1.SearchRequest
+ */
+export class SearchRequest extends Message<SearchRequest> {
+  /**
+   * @generated from field: string query = 1;
+   */
+  query = "";
+
+  constructor(data?: PartialMessage<SearchRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "v1.SearchRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "query", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SearchRequest {
+    return new SearchRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SearchRequest {
+    return new SearchRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SearchRequest {
+    return new SearchRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SearchRequest | PlainMessage<SearchRequest> | undefined, b: SearchRequest | PlainMessage<SearchRequest> | undefined): boolean {
+    return proto3.util.equals(SearchRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message v1.SearchResponse
+ */
+export class SearchResponse extends Message<SearchResponse> {
+  /**
+   * @generated from field: repeated v1.SearchResponse.Entry entries = 1;
+   */
+  entries: SearchResponse_Entry[] = [];
+
+  constructor(data?: PartialMessage<SearchResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "v1.SearchResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "entries", kind: "message", T: SearchResponse_Entry, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SearchResponse {
+    return new SearchResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SearchResponse {
+    return new SearchResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SearchResponse {
+    return new SearchResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SearchResponse | PlainMessage<SearchResponse> | undefined, b: SearchResponse | PlainMessage<SearchResponse> | undefined): boolean {
+    return proto3.util.equals(SearchResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message v1.SearchResponse.Entry
+ */
+export class SearchResponse_Entry extends Message<SearchResponse_Entry> {
+  /**
+   * @generated from field: repeated string path = 1;
+   */
+  path: string[] = [];
+
+  /**
+   * @generated from field: v1.EntryMetadata meta = 2;
+   */
+  meta?: EntryMetadata;
+
+  constructor(data?: PartialMessage<SearchResponse_Entry>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "v1.SearchResponse.Entry";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "path", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+    { no: 2, name: "meta", kind: "message", T: EntryMetadata },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): SearchResponse_Entry {
+    return new SearchResponse_Entry().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): SearchResponse_Entry {
+    return new SearchResponse_Entry().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): SearchResponse_Entry {
+    return new SearchResponse_Entry().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: SearchResponse_Entry | PlainMessage<SearchResponse_Entry> | undefined, b: SearchResponse_Entry | PlainMessage<SearchResponse_Entry> | undefined): boolean {
+    return proto3.util.equals(SearchResponse_Entry, a, b);
+  }
+}
+

@@ -41,6 +41,8 @@ const (
 	ArchiveServiceMoveProcedure = "/v1.ArchiveService/Move"
 	// ArchiveServiceDeleteProcedure is the fully-qualified name of the ArchiveService's Delete RPC.
 	ArchiveServiceDeleteProcedure = "/v1.ArchiveService/Delete"
+	// ArchiveServiceSearchProcedure is the fully-qualified name of the ArchiveService's Search RPC.
+	ArchiveServiceSearchProcedure = "/v1.ArchiveService/Search"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
@@ -50,6 +52,7 @@ var (
 	archiveServiceCreateMethodDescriptor = archiveServiceServiceDescriptor.Methods().ByName("Create")
 	archiveServiceMoveMethodDescriptor   = archiveServiceServiceDescriptor.Methods().ByName("Move")
 	archiveServiceDeleteMethodDescriptor = archiveServiceServiceDescriptor.Methods().ByName("Delete")
+	archiveServiceSearchMethodDescriptor = archiveServiceServiceDescriptor.Methods().ByName("Search")
 )
 
 // ArchiveServiceClient is a client for the v1.ArchiveService service.
@@ -58,6 +61,7 @@ type ArchiveServiceClient interface {
 	Create(context.Context, *connect.Request[v1.CreateRequest]) (*connect.Response[v1.CreateResponse], error)
 	Move(context.Context, *connect.Request[v1.MoveRequest]) (*connect.Response[v1.MoveResponse], error)
 	Delete(context.Context, *connect.Request[v1.DeleteRequest]) (*connect.Response[v1.DeleteResponse], error)
+	Search(context.Context, *connect.Request[v1.SearchRequest]) (*connect.Response[v1.SearchResponse], error)
 }
 
 // NewArchiveServiceClient constructs a client for the v1.ArchiveService service. By default, it
@@ -94,6 +98,12 @@ func NewArchiveServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			connect.WithSchema(archiveServiceDeleteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		search: connect.NewClient[v1.SearchRequest, v1.SearchResponse](
+			httpClient,
+			baseURL+ArchiveServiceSearchProcedure,
+			connect.WithSchema(archiveServiceSearchMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -103,6 +113,7 @@ type archiveServiceClient struct {
 	create *connect.Client[v1.CreateRequest, v1.CreateResponse]
 	move   *connect.Client[v1.MoveRequest, v1.MoveResponse]
 	delete *connect.Client[v1.DeleteRequest, v1.DeleteResponse]
+	search *connect.Client[v1.SearchRequest, v1.SearchResponse]
 }
 
 // Read calls v1.ArchiveService.Read.
@@ -125,12 +136,18 @@ func (c *archiveServiceClient) Delete(ctx context.Context, req *connect.Request[
 	return c.delete.CallUnary(ctx, req)
 }
 
+// Search calls v1.ArchiveService.Search.
+func (c *archiveServiceClient) Search(ctx context.Context, req *connect.Request[v1.SearchRequest]) (*connect.Response[v1.SearchResponse], error) {
+	return c.search.CallUnary(ctx, req)
+}
+
 // ArchiveServiceHandler is an implementation of the v1.ArchiveService service.
 type ArchiveServiceHandler interface {
 	Read(context.Context, *connect.Request[v1.ReadRequest]) (*connect.Response[v1.ReadResponse], error)
 	Create(context.Context, *connect.Request[v1.CreateRequest]) (*connect.Response[v1.CreateResponse], error)
 	Move(context.Context, *connect.Request[v1.MoveRequest]) (*connect.Response[v1.MoveResponse], error)
 	Delete(context.Context, *connect.Request[v1.DeleteRequest]) (*connect.Response[v1.DeleteResponse], error)
+	Search(context.Context, *connect.Request[v1.SearchRequest]) (*connect.Response[v1.SearchResponse], error)
 }
 
 // NewArchiveServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -163,6 +180,12 @@ func NewArchiveServiceHandler(svc ArchiveServiceHandler, opts ...connect.Handler
 		connect.WithSchema(archiveServiceDeleteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	archiveServiceSearchHandler := connect.NewUnaryHandler(
+		ArchiveServiceSearchProcedure,
+		svc.Search,
+		connect.WithSchema(archiveServiceSearchMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/v1.ArchiveService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ArchiveServiceReadProcedure:
@@ -173,6 +196,8 @@ func NewArchiveServiceHandler(svc ArchiveServiceHandler, opts ...connect.Handler
 			archiveServiceMoveHandler.ServeHTTP(w, r)
 		case ArchiveServiceDeleteProcedure:
 			archiveServiceDeleteHandler.ServeHTTP(w, r)
+		case ArchiveServiceSearchProcedure:
+			archiveServiceSearchHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -196,4 +221,8 @@ func (UnimplementedArchiveServiceHandler) Move(context.Context, *connect.Request
 
 func (UnimplementedArchiveServiceHandler) Delete(context.Context, *connect.Request[v1.DeleteRequest]) (*connect.Response[v1.DeleteResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("v1.ArchiveService.Delete is not implemented"))
+}
+
+func (UnimplementedArchiveServiceHandler) Search(context.Context, *connect.Request[v1.SearchRequest]) (*connect.Response[v1.SearchResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("v1.ArchiveService.Search is not implemented"))
 }

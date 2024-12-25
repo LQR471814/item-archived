@@ -65,10 +65,23 @@ message DeleteRequest {
 }
 message DeleteResponse {}
 
+// Search
+message SearchRequest {
+  string query = 1;
+}
+message SearchResponse {
+  message Entry {
+    repeated string path = 1;
+    EntryMetadata meta = 2;
+  }
+  repeated Entry entries = 1;
+}
+
 service ArchiveService {
   rpc Read(ReadRequest) returns (ReadResponse);
   rpc Create(CreateRequest) returns (CreateResponse);
   rpc Move(MoveRequest) returns (MoveResponse);
   rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc Search(SearchRequest) returns (SearchResponse);
 }
 

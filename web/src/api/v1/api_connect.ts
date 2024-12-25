@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { CreateRequest, CreateResponse, DeleteRequest, DeleteResponse, MoveRequest, MoveResponse, ReadRequest, ReadResponse } from "./api_pb.js";
+import { CreateRequest, CreateResponse, DeleteRequest, DeleteResponse, MoveRequest, MoveResponse, ReadRequest, ReadResponse, SearchRequest, SearchResponse } from "./api_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -46,6 +46,15 @@ export const ArchiveService = {
       name: "Delete",
       I: DeleteRequest,
       O: DeleteResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc v1.ArchiveService.Search
+     */
+    search: {
+      name: "Search",
+      I: SearchRequest,
+      O: SearchResponse,
       kind: MethodKind.Unary,
     },
   }
